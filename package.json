@@ -15,8 +15,7 @@
   "bugs": {
     "url": "https://github.com/jasonkarns/brew-publish/issues"
   },
-  "scripts": {
-  },
+  "bin": "bin/brew-publish",
   "keywords": [
     "brew",
     "homebrew",
