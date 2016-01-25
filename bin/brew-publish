@@ -29,14 +29,14 @@ if [ -z "$checksum" ]; then
   exit 1
 fi
 
-pushd "$(brew --prefix)"
+pushd "$(brew --prefix)/Library/Taps/nodenv/homebrew-nodenv"
 
 git fetch -q --unshallow origin master 2>/dev/null || git fetch -q origin master
 
 branch="${brew_name}-${version}"
 git checkout -q -B "$branch" origin/master
 
-formula="Library/Formula/${brew_name}.rb"
+formula="${brew_name}.rb"
 sed -i.bak -E "
   s!^(  url ).+!\\1\"${url}\"!
   s!^(  sha256 ).+!\\1\"${checksum}\"!
