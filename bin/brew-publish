@@ -1,5 +1,5 @@
 #!/bin/bash
-# Usage: script/brew-publish <name> <version> [<gh-project>]
+# Usage: script/brew-publish <name> <version> [-g <gh-project>]
 #
 # Updates the `<name>.rb` Homebrew formula to `<version>` and sends a pull
 # request with the change.
@@ -12,14 +12,24 @@ abort() {
 
 brew_name="${1?Formula name is required.}"
 version="${2?Formula version is required.}"
+shift 2
+
+while getopts ":g:" opt; do
+  case $opt in
+  g)
+    gh_project="github.com/${OPTARG}" ;;
+  :)
+    abort "Option -$OPTARG requires an argument." ;;
+  \?)
+    abort "Invalid option: -$OPTARG" ;;
+  esac
+done
 
 if ! type -p hub >/dev/null; then
   abort "ERROR: You have to install hub to proceed."
 fi
 
-if [ -n "$3" ]; then
-  gh_project="github.com/${3}"
-else
+if [ -z "$gh_project" ]; then
   gh_project="$(git remote -v | grep '^origin' | grep -oE 'github.com[:/][^/]+/[^/ ]+' | head -1)"
   gh_project="${gh_project%.git}"
 fi
