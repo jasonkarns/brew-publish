@@ -16,14 +16,10 @@ shift 2
 
 while getopts ":g:t:" opt; do
   case $opt in
-  g)
-    gh_project="github.com/${OPTARG}" ;;
-  t)
-    brew_dir="Taps/${OPTARG}" ;;
-  :)
-    abort "Option -$OPTARG requires an argument." ;;
-  \?)
-    abort "Invalid option: -$OPTARG" ;;
+  g) gh_project="github.com/${OPTARG}" ;;
+  t) brew_dir="Taps/${OPTARG}" ;;
+  :) abort "Option -$OPTARG requires an argument." ;;
+  \?) abort "Invalid option: -$OPTARG" ;;
   esac
 done
 
