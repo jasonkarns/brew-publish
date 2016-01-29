@@ -10,8 +10,8 @@ abort() {
   exit 1
 }
 
-brew_name="${1?}"
-version="${2?}"
+brew_name="${1?Formula name is required.}"
+version="${2?Formula version is required.}"
 
 if ! type -p hub >/dev/null; then
   abort "ERROR: You have to install hub to proceed."
