@@ -16,6 +16,9 @@
     "url": "https://github.com/jasonkarns/brew-publish/issues"
   },
   "bin": "bin/brew-publish",
+  "scripts": {
+    "postversion": "git push --follow-tags && npm publish"
+  },
   "keywords": [
     "brew",
     "homebrew",
