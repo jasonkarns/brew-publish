@@ -12,13 +12,14 @@ abort() {
 
 brew_name="${1?Formula name is required.}"
 version="${2?Formula version is required.}"
+brew_dir="homebrew/homebrew-core/Formula"
 shift 2
 
 while getopts ":g:rt:" opt; do
   case $opt in
   g) gh_project="github.com/${OPTARG}" ;;
   r) brew_remote="${OPTARG:-origin}" ;;
-  t) brew_dir="Taps/${OPTARG}" ;;
+  t) brew_dir="${OPTARG}" ;;
   :) abort "Option -$OPTARG requires an argument." ;;
   \?) abort "Invalid option: -$OPTARG" ;;
   esac
@@ -41,7 +42,7 @@ if [ -z "$checksum" ]; then
   abort "ERROR: calculating the checksum failed for $url"
 fi
 
-pushd "$(brew --prefix)/Library/${brew_dir:-Formula}"
+pushd "$(brew --prefix)/Library/Taps/${brew_dir}"
 
 git fetch -q --unshallow origin master 2>/dev/null || git fetch -q origin master
 
