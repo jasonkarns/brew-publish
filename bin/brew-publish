@@ -42,27 +42,5 @@ if [ -z "$checksum" ]; then
   abort "ERROR: calculating the checksum failed for $url"
 fi
 
-pushd "$(brew --prefix)/Library/Taps/${brew_dir}"
 
-git fetch -q --unshallow origin master 2>/dev/null || git fetch -q origin master
-
-branch="${brew_name}-${version}"
-git checkout -q -B "$branch" origin/master
-
-formula="${brew_name}.rb"
-sed -i.bak -E "
-  s!^(  url ).+!\\1\"${url}\"!
-  s!^(  sha256 ).+!\\1\"${checksum}\"!
-" "$formula"
-rm -f "${formula}.bak"
-
-git commit -m "${brew_name} ${version#v}" -- "$formula"
-
-if [ -z "$brew_remote" ]; then
-  # hackish way of getting the git remote name for user's fork
-  brew_remote="$(hub fork 2>&1 | grep -oE 'remote:? \S+' | tail -1 | awk '{print $2}')"
-fi
-git push -u "$brew_remote" HEAD
-hub pull-request -m "${brew_name} ${version#v}"
-
-git checkout -q -
+HOMEBREW_DEVELOPER=true brew bump-formula-pr "$brew_name"
