@@ -37,4 +37,4 @@ if [ -z "$checksum" ]; then
 fi
 
 
-HOMEBREW_DEVELOPER=true brew bump-formula-pr "$brew_name"
+HOMEBREW_DEVELOPER=true brew bump-formula-pr --url="$url" --sha256="$checksum" "$brew_name"
