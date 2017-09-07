@@ -1,6 +1,6 @@
 {
   "name": "brew-publish",
-  "version": "2.1.2",
+  "version": "2.2.0",
   "homepage": "https://github.com/jasonkarns/brew-publish#readme",
   "description": "Updates the given Homebrew formula version and sends a pull request with the change.",
   "author": "Mislav Marohnić <mislav.marohnic@gmail.com> (http://mislav.net)",
