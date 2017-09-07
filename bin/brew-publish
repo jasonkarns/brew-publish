@@ -40,4 +40,7 @@ if [ -z "$checksum" ]; then
   abort "ERROR: calculating the checksum failed for $url"
 fi
 
-HOMEBREW_DEVELOPER=true brew bump-formula-pr $force $dryrun --url="$url" --sha256="$checksum" "$brew_name"
+(
+  set -x
+  HOMEBREW_DEVELOPER=true brew bump-formula-pr $force $dryrun --url="$url" --sha256="$checksum" "$brew_name"
+)
