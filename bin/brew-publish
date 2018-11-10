@@ -1,11 +1,20 @@
 #!/usr/bin/env bash
+#
+# Bumps the `<name>.rb` Homebrew formula to `<version>` and opens a pull
+# request to the homebrew tap with the change.
+# Most behavior is provided by `brew bump-formula-pr`. This script derives
+# the checksum given just the github repo and version.
+#
 # Usage: script/brew-publish <name> <version> [-g <gh-project>] [-n] [-f]
 #
-#    -n    dry-run
-#    -f    force
+#   <name>           Homebrew formula name to be bumped.
+#   <version>        Version to which the given formula should be bumped.
+#   -g github-repo   The github project, as "user/repo"
+#                    [default: inferred from `origin` remote]
+#   -f               Passes `--force` option to `brew bump-formula-pr`
+#   -n               dry-run; enables bash tracing mode (`set -x`)
+#                    and passes --dry-run to `brew bump-formula-pr`
 #
-# Updates the `<name>.rb` Homebrew formula to `<version>` and sends a pull
-# request with the change.
 set -euo pipefail
 IFS=$'\n\t'
 
