@@ -16,6 +16,7 @@
   },
   "bin": "bin/brew-publish",
   "scripts": {
+    "start": "$npm_package_bin_brew_publish",
     "posttest": "npm run lint",
     "lint": "git ls-files bin | xargs shellcheck",
     "postversion": "git push --follow-tags && npm publish"
