@@ -1,21 +1,60 @@
 #!/usr/bin/env bash
-# Usage: script/brew-publish <name> <version> [-g <gh-project>] [-n] [-f]
 #
-#    -n    dry-run
-#    -f    force
+# Bumps the `<name>.rb` Homebrew formula to `<version>` and opens a pull
+# request to the homebrew tap with the change.
+# Most behavior is provided by `brew bump-formula-pr`. This script derives
+# the checksum given just the github repo and version.
 #
-# Updates the `<name>.rb` Homebrew formula to `<version>` and sends a pull
-# request with the change.
-set -e
+# Usage: brew-publish [<name> [<version>]] [-g <github-repo>] [-n] [-f]
+#
+#   <name>           Homebrew formula name to be bumped.
+#                    [default: $npm_package_name or package.json#name]
+#   <version>        Version to which the given formula should be bumped.
+#                    [default: $npm_package_version or package.json#version]
+#   -g github-repo   The github project, as "user/repo"
+#                    [default: inferred from `origin` remote]
+#   -f               Passes `--force` option to `brew bump-formula-pr`
+#   -n               dry-run; enables bash tracing mode (`set -x`)
+#                    and passes --dry-run to `brew bump-formula-pr`
+#
+set -euo pipefail
+IFS=$'\n\t'
 
 abort() {
   echo "$1" >&2
   exit 1
 }
 
-brew_name="${1?Formula name is required.}"
-version="${2?Formula version is required.}"
-shift 2
+# get name or version from $npm_package_*;
+# fall back to reading it from package.json
+infer() {
+  local var=$1
+
+  local npm_var=npm_package_$var
+  echo "${!npm_var:-$(node -p "require('./package').$var")}"
+}
+
+positional_arg() {
+  [[ $1 =~ ^[^-] ]]
+}
+
+if positional_arg "${1-}"; then
+  name=$1
+  shift
+else
+  name=$(infer name)
+fi
+
+if positional_arg "${1-}"; then
+  version=$1
+  shift
+else
+  version=v$(infer version)
+fi
+
+force=
+gh_project=
+dryrun=
 
 while getopts ":fg:n" opt; do
   case $opt in
@@ -42,5 +81,5 @@ fi
 
 (
   set -x
-  HOMEBREW_DEVELOPER=true brew bump-formula-pr $force $dryrun --url="$url" --sha256="$checksum" "$brew_name"
+  HOMEBREW_DEVELOPER=true brew bump-formula-pr $force $dryrun --url="$url" --sha256="$checksum" "$name"
 )
