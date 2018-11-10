@@ -6,7 +6,8 @@
 #
 # Updates the `<name>.rb` Homebrew formula to `<version>` and sends a pull
 # request with the change.
-set -e
+set -euo pipefail
+IFS=$'\n\t'
 
 abort() {
   echo "$1" >&2
@@ -16,6 +17,10 @@ abort() {
 brew_name="${1?Formula name is required.}"
 version="${2?Formula version is required.}"
 shift 2
+
+force=
+gh_project=
+dryrun=
 
 while getopts ":fg:n" opt; do
   case $opt in
