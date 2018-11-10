@@ -43,6 +43,7 @@ if positional_arg "${1-}"; then
   shift
 else
   name=$(infer name)
+  name=${name#@*/} # remove leading package scope, if exists
 fi
 
 if positional_arg "${1-}"; then
